@@ -1,8 +1,11 @@
 ﻿using System;
+using MongoDB.Bson;
+
 namespace ebikeshopserver.Models.GlobalModels
 {
 	public class Address
 	{
+        public ObjectId AddressId { get; set; }
         public string? State { get; set; }
         public string Country { get; set; }
         public string City { get; set; }
