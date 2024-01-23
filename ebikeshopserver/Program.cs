@@ -1,3 +1,6 @@
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using ebikeshopserver.Services.Data;
 
 namespace ebikeshopserver;
 
@@ -13,6 +16,12 @@ public class Program
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+
+        builder.Services.AddSingleton(serviceProvider =>
+        {
+            var config = serviceProvider.GetService<IConfiguration>();
+            return MongoDbService.CreateMongoClient(config);
+        });
 
         var app = builder.Build();
 
