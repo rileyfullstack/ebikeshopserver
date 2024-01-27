@@ -8,7 +8,7 @@ namespace ebikeshopserver.Services.Data
         public static IMongoClient CreateMongoClient(IConfiguration configuration)
         {
             string environment = configuration.GetValue<string>("Environment");
-            string connectionString = environment == "development" ? "mongodb://localhost:27017" : "Atlas string";
+            string connectionString = environment != "development" ? "mongodb://localhost:27017" : "Atlas string";
 
             try
             {

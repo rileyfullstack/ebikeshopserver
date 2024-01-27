@@ -26,12 +26,11 @@ namespace ebikeshopserver.Services
             {
                 throw new UserAlreadyExistsException("User with this email already exists.");
             }
-
-            newUser.Password = PasswordHelper.GeneratePassword(newUser.Password);
-            if(newUser.Role != "User" || newUser.Role != "Business")
+            if (newUser.Role != "User" && newUser.Role != "Business") //Admins will only be set menually
             {
-                throw new BadRoleException("The role in the user that has been requested to be created is invalid."); 
+                throw new BadRoleException("The role in the user that has been requested to be created is invalid.");
             }
+            newUser.Password = PasswordHelper.GeneratePassword(newUser.Password);
             await _users.InsertOneAsync(newUser);
             return new { newUser.Id, newUser.FirstName, newUser.Email };
         }

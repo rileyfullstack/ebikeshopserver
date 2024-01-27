@@ -52,7 +52,7 @@ namespace ebikeshopserver.Controllers
             try
             {
                 object DTOuser = await _usersService.CreateUserAsync(newUser);
-                return CreatedAtAction(nameof(GetSpecificUser), new { Id = newUser.Id }, newUser);
+                return CreatedAtAction(nameof(GetSpecificUser), new { Id = newUser.Id }, DTOuser);
             }
             catch (Exception ex)
             {
