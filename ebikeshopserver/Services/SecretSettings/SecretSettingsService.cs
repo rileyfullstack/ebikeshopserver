@@ -14,7 +14,7 @@ namespace ebikeshopserver.Services.SecretSettings
             Configuration = builder.Build();
         }
 
-        public static string GetConnectionString()
+        public static string GetPasswordHasher()
         {
             return Configuration.GetConnectionString("SecretHasher");
         }
