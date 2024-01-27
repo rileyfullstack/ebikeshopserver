@@ -1,0 +1,11 @@
+﻿# Ignore appsettings.json to prevent exposing sensitive information
+appsettings.json
+
+# Ignore bin and obj folders
+bin/
+obj/
+
+# Ignore other common files
+*.log
+*.tmp
+*.temp
