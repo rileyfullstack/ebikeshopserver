@@ -23,6 +23,16 @@ public class Program
             return MongoDbService.CreateMongoClient(config);
         });
 
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("LocalCorsPolicy", policy =>
+            {
+                policy.WithOrigins("http://localhost:3000")
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
+        });
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -31,6 +41,8 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI();
         }
+
+        app.UseCors("LocalCorsPolicy");
 
         app.UseHttpsRedirection();
 
