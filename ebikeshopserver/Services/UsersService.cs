@@ -28,6 +28,10 @@ namespace ebikeshopserver.Services
             }
 
             newUser.Password = PasswordHelper.GeneratePassword(newUser.Password);
+            if(newUser.Role != "User" || newUser.Role != "Business")
+            {
+                throw new BadRoleException("The role in the user that has been requested to be created is invalid."); 
+            }
             await _users.InsertOneAsync(newUser);
             return new { newUser.Id, newUser.FirstName, newUser.Email };
         }
@@ -47,7 +51,6 @@ namespace ebikeshopserver.Services
             User? specificUser = await _users.Find(u => u.Id.ToString() == userId).Project<User>(projection).FirstOrDefaultAsync();
             if (specificUser == null)
             {
-                //exception user not found
                 throw new UserNotFoundException(userId);
             }
             return specificUser;

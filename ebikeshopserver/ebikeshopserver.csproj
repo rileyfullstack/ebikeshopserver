@@ -15,6 +15,7 @@
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="7.2.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.23.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.2.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,6 +27,8 @@
     <None Remove="Exceptions\" />
     <None Remove="Utils\" />
     <None Remove="Middlewares\" />
+    <None Remove="Authentication\" />
+    <None Remove="Services\SecretSettings\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
@@ -36,5 +39,7 @@
     <Folder Include="Exceptions\" />
     <Folder Include="Utils\" />
     <Folder Include="Middlewares\" />
+    <Folder Include="Authentication\" />
+    <Folder Include="Services\SecretSettings\" />
   </ItemGroup>
 </Project>

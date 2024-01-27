@@ -28,7 +28,7 @@ public class Program
         {
             options.AddPolicy("LocalCorsPolicy", policy =>
             {
-                policy.WithOrigins("http://localhost:3000")
+                policy.AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader();
             });
