@@ -25,6 +25,7 @@
     <None Remove="Services\Data\" />
     <None Remove="Exceptions\" />
     <None Remove="Utils\" />
+    <None Remove="Middlewares\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
@@ -34,5 +35,6 @@
     <Folder Include="Services\Data\" />
     <Folder Include="Exceptions\" />
     <Folder Include="Utils\" />
+    <Folder Include="Middlewares\" />
   </ItemGroup>
 </Project>

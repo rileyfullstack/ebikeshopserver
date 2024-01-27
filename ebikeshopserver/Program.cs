@@ -1,6 +1,7 @@
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ebikeshopserver.Services.Data;
+using ebikeshopserver.Middlewares;
 
 namespace ebikeshopserver;
 
@@ -48,6 +49,7 @@ public class Program
 
         app.UseAuthorization();
 
+        app.UseMiddleware<RequestsResponsesLogger>();
 
         app.MapControllers();
 
