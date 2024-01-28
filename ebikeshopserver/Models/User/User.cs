@@ -3,25 +3,42 @@ using MongoDB.Bson;
 using System.Net;
 using System.Xml.Linq;
 using ebikeshopserver.Models.GlobalModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace ebikeshopserver.Models.User
 {
 	public class User
 	{
         public ObjectId Id { get; set; }
+
+        [Required, StringLength(maximumLength: 32, MinimumLength = 2)]
         public string FirstName { get; set; }
+
+        [Required, StringLength(maximumLength: 32, MinimumLength = 2)]
         public string LastName { get; set; }
+
+        [Required, EmailAddress]
         public string Email { get; set; }
+
+        [Required, StringLength(maximumLength: 32, MinimumLength = 8)]
         public string Password { get; set; }
+
+        [Required, Phone]
         public string PhoneNumber { get; set; }
+
+        [Required]
         public Image ProfilePicture { get; set; }
+
+        [Required]
         public Address[] UserAddress { get; set; }
-        public string Role { get; set; } //Either user, seller, or admin
+
+        [Required]
+        public UserRole Role { get; set; } //Either user, seller, or admin
         public DateTime UserCreationDate { get; set; }
 
         public User(string firstName, string lastName, string email,
                 string password, string phoneNumber, Image profilePicture,
-                Address[] userAddress, string role)
+                Address[] userAddress, UserRole role)
         {
             FirstName = firstName;
             LastName = lastName;

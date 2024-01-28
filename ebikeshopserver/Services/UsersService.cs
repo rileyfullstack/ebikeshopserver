@@ -26,7 +26,7 @@ namespace ebikeshopserver.Services
             {
                 throw new UserAlreadyExistsException("User with this email already exists.");
             }
-            if (newUser.Role != "User" && newUser.Role != "Business") //Admins will only be set menually
+            if (newUser.Role != UserRole.User && newUser.Role != UserRole.Seller) //Admins will only be set menually
             {
                 throw new BadRoleException("The role in the user that has been requested to be created is invalid.");
             }

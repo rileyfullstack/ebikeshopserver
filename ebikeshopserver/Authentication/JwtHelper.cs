@@ -20,7 +20,7 @@ namespace ebikeshopserver.Authentication
             Claim[] claims = new Claim[]
             {
                 new Claim("id", user.Id.ToString()),
-                new Claim("role", user.Role),
+                new Claim("role", user.Role.ToString()),
                 new Claim("firstName", user.FirstName)
             };
 
