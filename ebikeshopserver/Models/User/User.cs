@@ -33,7 +33,8 @@ namespace ebikeshopserver.Models.User
         public Address[] UserAddress { get; set; }
 
         [Required]
-        public UserRole Role { get; set; } //Either user, seller, or admin
+        public UserRole Role { get; set; } //Either User, Seller, or Admin
+
         public DateTime UserCreationDate { get; set; }
 
         public User(string firstName, string lastName, string email,
