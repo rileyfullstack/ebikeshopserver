@@ -8,7 +8,7 @@ namespace ebikeshopserver.Models.SellPost
 	public class SellPost
 	{
         [Required]
-        public ObjectId PostID { get; set; }
+        public ObjectId PostId { get; set; }
 
 		[Required]
 		public string SellerId { get; set; }
@@ -20,10 +20,10 @@ namespace ebikeshopserver.Models.SellPost
         public string Description { get; set; }
 
         [Required]
-        public Type Type { get; set; }
+        public string Catagory { get; set; }
 
         [Required]
-        public SubType SubType { get; set; }
+        public string SubCatagory { get; set; }
 
         [Required]
         public string CatagoryId { get; set; }
@@ -48,7 +48,7 @@ namespace ebikeshopserver.Models.SellPost
 
         public DateTime PostCreationDate { get; }
 
-        private DateTime? LastUpdatedDate;
+        public DateTime? LastUpdatedDate { get; set; }
 	}
 }
 

@@ -1,11 +1,11 @@
 ﻿using System;
-namespace ebikeshopserver.Services.SecretSettings
+namespace ebikeshopserver.Utils
 {
-	public class SecretSettingsService
+	public class SecretSettingsProvider
 	{
         private static IConfiguration Configuration { get; set; }
 
-        static SecretSettingsService()
+        static SecretSettingsProvider()
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())

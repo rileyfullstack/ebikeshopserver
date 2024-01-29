@@ -4,7 +4,7 @@ using System.Text;
 using ebikeshopserver.Models.User;
 using Microsoft.IdentityModel.Tokens;
 using System;
-using ebikeshopserver.Services.SecretSettings;
+using ebikeshopserver.Utils;
 
 namespace ebikeshopserver.Authentication
 {
@@ -12,7 +12,7 @@ namespace ebikeshopserver.Authentication
     {
         public static string GenerateAuthToken(User user)
         {
-            string secretKey = "testHasher123"; //SecretSettingsService.GetPasswordHasher();
+            string secretKey = SecretSettingsProvider.GetPasswordHasher();
 
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             SigningCredentials credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
