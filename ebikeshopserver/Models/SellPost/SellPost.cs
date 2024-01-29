@@ -1,27 +1,54 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using ebikeshopserver.Models.GlobalModels;
 using MongoDB.Bson;
 
 namespace ebikeshopserver.Models.SellPost
 {
 	public class SellPost
 	{
-		public ObjectId PostID { get; set; }
+        [Required]
+        public ObjectId PostID { get; set; }
 
 		[Required]
 		public string SellerId { get; set; }
-		public string Title { get; set; }
-		public string Description { get; set; }
-		public Type Type { get; set; }
-		public SubType SubType { get; set; }
-		public string CatagoryId { get; set; }
-		public string SubcatagoryId { get; set; }
-		public Decimal128 Price { get; set; }
 
+        [Required]
+        public string Title { get; set; }
 
-        public SellPost()
-		{
-		}
+        [Required]
+        public string Description { get; set; }
+
+        [Required]
+        public Type Type { get; set; }
+
+        [Required]
+        public SubType SubType { get; set; }
+
+        [Required]
+        public string CatagoryId { get; set; }
+
+        [Required]
+        public string SubcatagoryId { get; set; }
+
+        [Required]
+        public Decimal128 Price { get; set; }
+
+        public Image[] Image { get; set; }
+
+        public double CurrentDiscount { get; set; }
+
+        public Dictionary<string,string> Specifications { get; set; }
+
+        [Required]
+        public int ItemsLeft { get; set; }
+
+        [Required]
+        public SellPostStatus Status { get; set; }
+
+        public DateTime PostCreationDate { get; }
+
+        private DateTime? LastUpdatedDate;
 	}
 }
 
