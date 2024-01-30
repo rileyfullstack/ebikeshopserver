@@ -22,16 +22,26 @@ namespace ebikeshopserver.Services
             var existingPost = await _sellPosts.Find(u => u.Title == newSellPost.Title).FirstOrDefaultAsync();
             if(existingPost != null)
             {
-                throw new PostAlreadyExistsException("Post with this title already exists.");
+                throw new PostAlreadyExistsException("A post with this title already exists.");
             }
             await _sellPosts.InsertOneAsync(newSellPost);
             return new { newSellPost.PostId, newSellPost.Title};
         }
 
-        public async Task<List<SellPost>> GetAllSellPostsAsync()
+        public async Task<List<SellPost>> GetAllSellPostsAsync() //Only non deleted
         {
             var allSalePosts = await _sellPosts.Find(_ => true).ToListAsync();
             if(allSalePosts == null)
+            {
+                throw new NoPostsFoundException("No posts have been found (Possible DB connection issue).");
+            }
+            return allSalePosts;
+        }
+
+        public async Task<List<SellPost>> GetSellPostsAsync() //Only non deleted
+        {
+            var allSalePosts = await _sellPosts.Find(p => p.Status != SellPostStatus.Deleted).ToListAsync();
+            if (allSalePosts == null)
             {
                 throw new NoPostsFoundException("No posts have been found (Possible DB connection issue).");
             }
@@ -55,15 +65,6 @@ namespace ebikeshopserver.Services
                 throw new NoPostsFoundException($"No post with the ID {postId} have been found.");
             }
             return salePost;
-        }
-
-        public async void DeleteUserAsync(string userId)
-        {
-            var result = await _sellPosts.DeleteOneAsync(u => u.PostId.ToString() == userId);
-            if (result.DeletedCount == 0)
-            {
-                throw new NoPostsFoundException("The post to delete wasn't found.");
-            }
         }
 
         //This will be used to alter any details about a post.
@@ -96,6 +97,8 @@ namespace ebikeshopserver.Services
 
             return updatedSellPost; 
         }
+
+
     }
 }
 

@@ -16,7 +16,6 @@ namespace ebikeshopserver.Controllers
         private UsersService _usersService;
 
         public UserController(IMongoClient mongoClient)
-
         {
             _usersService = new UsersService(mongoClient);
         }
