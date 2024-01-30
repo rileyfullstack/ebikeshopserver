@@ -1,7 +1,6 @@
 ﻿using System;
 using ebikeshopserver.Exceptions;
 using ebikeshopserver.Models.SellPost;
-using ebikeshopserver.Models.User;
 using ebikeshopserver.Services;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
@@ -20,14 +19,14 @@ namespace ebikeshopserver.Controllers
 		}
 
         [HttpGet]
-        public async Task<IActionResult> GetAllSellPosts() //No authoraty needed
+        public async Task<IActionResult> GetAllSellPosts() 
         {
             List<SellPost> result = await _sellPostsService.GetSellPostsAsync();
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetSpecificSellPost(string id) 
+        public async Task<IActionResult> GetSellPost(string id) 
         {
             try
             {
@@ -40,17 +39,26 @@ namespace ebikeshopserver.Controllers
             }
         }
 
-        [HttpGet("category/{category}")]
-        public async Task<IActionResult> GetCatagorySellPosts(string category)
+        [HttpPost]
+        public async Task<IActionResult> CreateSellPost([FromBody] SellPost newSellPost) //Allow only to sellers and admins, as well as make sure to take the token from the sellers to use in the id of the new post.
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             try
             {
-                var sellPosts = await _sellPostsService.GetCatagorySellPosts(category);
-                return Ok(sellPosts);
+                SellPost createdPost = await _sellPostsService.CreateSellPostAsync(newSellPost);
+                return CreatedAtAction(nameof(GetSellPost), new { id = createdPost._id.ToString() }, createdPost);
             }
-            catch (NoPostsFoundException ex)
+            catch (PostAlreadyExistsException ex)
             {
-                return NotFound(ex.Message);
+                return Conflict(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
 
@@ -68,6 +76,7 @@ namespace ebikeshopserver.Controllers
             }
         }
 
+        [HttpDelete]
         public async Task<IActionResult> DeleteSellPost(string postId) //Make sure its only available to admins or sellers who created the post.
         {
             try
@@ -90,7 +99,7 @@ namespace ebikeshopserver.Controllers
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateSellPost([FromBody] SellPost sellPost)
+        public async Task<IActionResult> UpdateSellPost([FromBody] SellPost sellPost) //Make sure to only make available to sellers who posted it, as well as admins.
         {
             if (!ModelState.IsValid)
             {
@@ -99,7 +108,7 @@ namespace ebikeshopserver.Controllers
 
             try
             {
-                string postId = sellPost.PostId.ToString();
+                string postId = sellPost._id.ToString();
                 SellPost updatedPost = await _sellPostsService.EditSellPostAsync(postId, sellPost);
                 return Ok(updatedPost);
             }
@@ -112,6 +121,43 @@ namespace ebikeshopserver.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpGet("filter/price")]
+        public async Task<IActionResult> GetSellPostsByPriceRange([FromQuery] decimal minPrice, [FromQuery] decimal maxPrice)
+        {
+            try
+            {
+                var sellPosts = await _sellPostsService.GetSellPostsByPriceRange(minPrice, maxPrice);
+                return Ok(sellPosts);
+            }
+            catch (NoPostsFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("seller/{sellerId}")]
+        public async Task<IActionResult> GetSellPostsBySellerId(string sellerId) 
+        {
+            try
+            {
+                var sellPosts = await _sellPostsService.GetSellPostsBySellerId(sellerId);
+                return Ok(sellPosts);
+            }
+            catch (NoPostsFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
 

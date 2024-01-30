@@ -1,7 +1,6 @@
 ﻿using System;
 using ebikeshopserver.Exceptions;
 using ebikeshopserver.Models.SellPost;
-using ebikeshopserver.Models.User;
 using MongoDB.Bson;
 using MongoDB.Driver;
 
@@ -17,7 +16,7 @@ namespace ebikeshopserver.Services
             _sellPosts = database.GetCollection<SellPost>("sellPosts");
         }
 
-        public async Task<object> CreateSellPostAsync(SellPost newSellPost)
+        public async Task<SellPost> CreateSellPostAsync(SellPost newSellPost) //Add functionality 
         {
             var existingPost = await _sellPosts.Find(u => u.Title == newSellPost.Title).FirstOrDefaultAsync();
             if(existingPost != null)
@@ -25,7 +24,7 @@ namespace ebikeshopserver.Services
                 throw new PostAlreadyExistsException("A post with this title already exists.");
             }
             await _sellPosts.InsertOneAsync(newSellPost);
-            return new { newSellPost.PostId, newSellPost.Title};
+            return newSellPost;
         }
 
         public async Task<List<SellPost>> GetAllSellPostsAsync() //Only non deleted
@@ -59,7 +58,7 @@ namespace ebikeshopserver.Services
 
         public async Task<SellPost> GetSellPostAsync(string postId)
         {
-            var salePost = await _sellPosts.Find(s => s.PostId.ToString() == postId).FirstOrDefaultAsync();
+            var salePost = await _sellPosts.Find(s => s._id.ToString() == postId).FirstOrDefaultAsync();
             if(salePost == null)
             {
                 throw new NoPostsFoundException($"No post with the ID {postId} have been found.");
@@ -71,7 +70,7 @@ namespace ebikeshopserver.Services
         //No matter if you only need to change one thing, like the price, or the status, it will all be used here.
         public async Task<SellPost> EditSellPostAsync(string postId, SellPost updatedSellPost) 
         {
-            var filter = Builders<SellPost>.Filter.Eq(sp => sp.PostId, new ObjectId(postId));
+            var filter = Builders<SellPost>.Filter.Eq(sp => sp._id, new ObjectId(postId));
 
             var update = Builders<SellPost>.Update
                 .Set(sp => sp.Title, updatedSellPost.Title)
@@ -98,6 +97,31 @@ namespace ebikeshopserver.Services
             return updatedSellPost; 
         }
 
+        public async Task<List<SellPost>> GetSellPostsByPriceRange(decimal minPrice, decimal maxPrice)
+        {
+            var filter = Builders<SellPost>.Filter.Where(sp => sp.Price >= minPrice && sp.Price <= maxPrice && sp.Status != SellPostStatus.Deleted);
+            var sellPostsInRange = await _sellPosts.Find(filter).ToListAsync();
+
+            if (sellPostsInRange == null || sellPostsInRange.Count == 0)
+            {
+                throw new NoPostsFoundException("No posts found in the specified price range.");
+            }
+
+            return sellPostsInRange;
+        }
+
+        public async Task<List<SellPost>> GetSellPostsBySellerId(string sellerId)
+        {
+            var filter = Builders<SellPost>.Filter.Eq(sp => sp.SellerId, sellerId);
+            var sellPosts = await _sellPosts.Find(filter).ToListAsync();
+
+            if (sellPosts == null || sellPosts.Count == 0)
+            {
+                throw new NoPostsFoundException($"No posts found for the seller with ID {sellerId}.");
+            }
+
+            return sellPosts;
+        }
 
     }
 }

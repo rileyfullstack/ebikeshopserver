@@ -1,0 +1,3 @@
+﻿Add authorirty in all controllers after finishing them.
+
+Add in the method CreateSellPostAsync in the SellPostService functionality that takes the token from the seller and makes it the seller Id.

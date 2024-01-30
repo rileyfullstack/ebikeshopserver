@@ -2,13 +2,14 @@
 using System.ComponentModel.DataAnnotations;
 using ebikeshopserver.Models.GlobalModels;
 using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace ebikeshopserver.Models.SellPost
 {
 	public class SellPost
 	{
         [Required]
-        public ObjectId PostId { get; set; }
+        public ObjectId _id { get; set; }
 
 		[Required]
 		public string SellerId { get; set; }
@@ -32,7 +33,7 @@ namespace ebikeshopserver.Models.SellPost
         public string SubcatagoryId { get; set; }
 
         [Required]
-        public Decimal128 Price { get; set; }
+        public decimal Price { get; set; }
 
         public Image[] Image { get; set; }
 

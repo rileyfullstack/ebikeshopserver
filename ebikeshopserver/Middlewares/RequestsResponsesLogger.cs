@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using Microsoft.AspNetCore.Http.Extensions;
 
 namespace ebikeshopserver.Middlewares
@@ -34,9 +35,14 @@ namespace ebikeshopserver.Middlewares
             {
                 Console.ForegroundColor = ConsoleColor.Green;
             }
-            Console.WriteLine($"Time: [{dateTime}] - Origin: {origin} - Path: {path} - Method: {method} - Status: {statusCode} - ResTime: {responseTime}ms");
+
+            HttpStatusCode httpStatusCode = (HttpStatusCode)statusCode;
+            string statusDescription = httpStatusCode.ToString();
+
+            Console.WriteLine($"Time: [{dateTime}] - Origin: {origin} - Path: {path} - Method: {method} - Status: {statusCode} ({statusDescription}) - ResTime: {responseTime}ms");
             Console.ResetColor();
         }
+
     }
 }
 
