@@ -76,9 +76,10 @@ namespace ebikeshopserver.Controllers
             }
         }
 
-        [HttpDelete]
+        [HttpDelete("{postId}")]
         public async Task<IActionResult> DeleteSellPost(string postId) //Make sure its only available to admins or sellers who created the post.
         {
+            Console.WriteLine("Test");
             try
             {
                 SellPost existingPost = await _sellPostsService.GetSellPostAsync(postId);
@@ -98,8 +99,8 @@ namespace ebikeshopserver.Controllers
             }
         }
 
-        [HttpPut]
-        public async Task<IActionResult> UpdateSellPost([FromBody] SellPost sellPost) //Make sure to only make available to sellers who posted it, as well as admins.
+        [HttpPut("{postId}")]
+        public async Task<IActionResult> UpdateSellPost([FromBody] SellPost sellPost, string postId) //Make sure to only make available to sellers who posted it, as well as admins.
         {
             if (!ModelState.IsValid)
             {
@@ -108,7 +109,6 @@ namespace ebikeshopserver.Controllers
 
             try
             {
-                string postId = sellPost._id.ToString();
                 SellPost updatedPost = await _sellPostsService.EditSellPostAsync(postId, sellPost);
                 return Ok(updatedPost);
             }
