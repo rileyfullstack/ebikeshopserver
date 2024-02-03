@@ -18,7 +18,8 @@ namespace ebikeshopserver.Services
         {
             var database = mongoClient.GetDatabase("ebike_shop_server");
             _orders = database.GetCollection<Order>("orders");
-            _sellPosts = database.GetCollection<SellPost>("sellPosts"); _sellPosts = database.GetCollection<SellPost>("sellPosts");
+            _sellPosts = database.GetCollection<SellPost>("sellPosts");
+            _users = database.GetCollection<User>("users");
         }
 
         public async Task<string> CreateNewOrderAsync(Order order)
@@ -27,7 +28,7 @@ namespace ebikeshopserver.Services
 
             foreach (var item in order.Items)
             {
-                var sellPost = await _sellPosts.Find(sp => sp._id == item.Key._id).FirstOrDefaultAsync();
+                var sellPost = await _sellPosts.Find(sp => sp._id.ToString() == item.Key).FirstOrDefaultAsync();
                 if (sellPost != null)
                 {
                     decimal discountAmount = sellPost.Price * (decimal)sellPost.CurrentDiscount;
@@ -37,7 +38,7 @@ namespace ebikeshopserver.Services
                 }
                 else
                 {
-                    throw new NoPostsFoundException($"Sell post with ID {item.Key._id} not found.");
+                    throw new NoPostsFoundException($"Sell post with ID {item.Key} not found.");
                 }
             }
 
@@ -51,7 +52,7 @@ namespace ebikeshopserver.Services
         public async Task<List<Order>> GetOrdersByUserIdAsync(string userId) 
         {
             var user = await _users.Find(u => u.Id.ToString() == userId).FirstOrDefaultAsync();
-            if (user != null)
+            if (user == null)
             {
                 throw new UserNotFoundException($"User {userId} has not been found.");
             }

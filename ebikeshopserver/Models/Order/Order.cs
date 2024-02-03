@@ -14,10 +14,10 @@ namespace ebikeshopserver.Models.Order
         public string UserId { get; set; }
 
         [Required]
-        public Dictionary<SellPost, int> Items { get; set; }
+        public Dictionary<string, int> Items { get; set; }
 
         [Required]
-        public DateTime OrderTime { get; set; }
+        public DateTime OrderTime { get; set; } 
 
         public decimal? TotalPrice { get; set; }
 

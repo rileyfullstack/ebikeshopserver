@@ -53,7 +53,7 @@ namespace ebikeshopserver.Controllers
             try
             {
                 string newOrderId = await _ordersService.CreateNewOrderAsync(order);
-                return CreatedAtAction(nameof(GetOrderById), new { id = newOrderId }, order);
+                return CreatedAtAction(nameof(GetOrderById), new { orderId = newOrderId }, order);
             } catch (NoPostsFoundException ex)
             {
                 return BadRequest();
@@ -74,7 +74,6 @@ namespace ebikeshopserver.Controllers
             }
             catch (Exception ex)
             {
-                // Consider logging the exception details
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
