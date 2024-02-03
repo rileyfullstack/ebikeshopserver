@@ -21,7 +21,7 @@ namespace ebikeshopserver.Services
             _sellPosts = database.GetCollection<SellPost>("sellPosts"); _sellPosts = database.GetCollection<SellPost>("sellPosts");
         }
 
-        public async Task CreateNewOrderAsync(Order order)
+        public async Task<string> CreateNewOrderAsync(Order order)
         {
             decimal totalPrice = 0;
 
@@ -45,9 +45,10 @@ namespace ebikeshopserver.Services
             order.OrderTime = DateTime.Now;
 
             await _orders.InsertOneAsync(order);
+            return order._id.ToString();
         }
 
-        public async Task<List<Order>> GetOrdersByUserIdAsync(string userId) //Only for users where the token = the user Id and admins.
+        public async Task<List<Order>> GetOrdersByUserIdAsync(string userId) 
         {
             var user = await _users.Find(u => u.Id.ToString() == userId).FirstOrDefaultAsync();
             if (user != null)
@@ -63,7 +64,7 @@ namespace ebikeshopserver.Services
             return orders;
         }
 
-        public async Task<Order> GetOrderByIdAsync(string orderId) //Check that the requested Id was by the user who created it or an admin
+        public async Task<Order> GetOrderByIdAsync(string orderId) 
         {
             var order = await _orders.Find(o => o._id.ToString() == orderId).FirstOrDefaultAsync();
             if (order == null)
