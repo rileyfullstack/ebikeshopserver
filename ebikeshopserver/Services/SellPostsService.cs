@@ -1,6 +1,6 @@
 ﻿using System;
 using ebikeshopserver.Exceptions;
-using ebikeshopserver.Models.SellPost;
+using ebikeshopserver.Models.SellPosts;
 using MongoDB.Bson;
 using MongoDB.Driver;
 

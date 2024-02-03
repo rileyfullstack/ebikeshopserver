@@ -1,5 +1,5 @@
 ﻿using System;
-namespace ebikeshopserver.Models.SellPost
+namespace ebikeshopserver.Models.SellPosts
 {
 	public enum SellPostStatus
 	{

@@ -29,7 +29,8 @@
     <None Remove="Middlewares\" />
     <None Remove="Authentication\" />
     <None Remove="Services\SecretSettings\" />
-    <None Remove="Models\SellPost\" />
+    <None Remove="Models\Order\" />
+    <None Remove="Models\SellPosts\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
@@ -42,6 +43,7 @@
     <Folder Include="Middlewares\" />
     <Folder Include="Authentication\" />
     <Folder Include="Services\SecretSettings\" />
-    <Folder Include="Models\SellPost\" />
+    <Folder Include="Models\Order\" />
+    <Folder Include="Models\SellPosts\" />
   </ItemGroup>
 </Project>

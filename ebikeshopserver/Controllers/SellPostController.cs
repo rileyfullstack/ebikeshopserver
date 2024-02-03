@@ -1,6 +1,6 @@
 ﻿using System;
 using ebikeshopserver.Exceptions;
-using ebikeshopserver.Models.SellPost;
+using ebikeshopserver.Models.SellPosts;
 using ebikeshopserver.Services;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
@@ -160,4 +160,3 @@ namespace ebikeshopserver.Controllers
 
     }
 }
-

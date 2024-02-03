@@ -4,7 +4,7 @@ using ebikeshopserver.Models.GlobalModels;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace ebikeshopserver.Models.SellPost
+namespace ebikeshopserver.Models.SellPosts
 {
 	public class SellPost
 	{
