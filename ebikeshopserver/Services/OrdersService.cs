@@ -1,5 +1,6 @@
 ﻿using System;
 using ebikeshopserver.Exceptions;
+using ebikeshopserver.Models.GlobalModels;
 using ebikeshopserver.Models.Order;
 using ebikeshopserver.Models.SellPosts;
 using ebikeshopserver.Models.User;
@@ -35,6 +36,17 @@ namespace ebikeshopserver.Services
                     decimal discountedPricePerItem = sellPost.Price - discountAmount;
 
                     totalPrice += discountedPricePerItem * item.Value;
+
+                    OrderSellPost frozenSellPost = new OrderSellPost
+                    {
+                        _id = sellPost._id.ToString(),
+                        SellerId = sellPost.SellerId,
+                        Title = sellPost.Title,
+                        Price = sellPost.Price - discountAmount,
+                        CurrentDiscount = sellPost.CurrentDiscount,
+                        Quantity = item.Value
+                    };
+                    order.FrozenSellPost.Add(frozenSellPost);
                 }
                 else
                 {
@@ -48,6 +60,7 @@ namespace ebikeshopserver.Services
             await _orders.InsertOneAsync(order);
             return order._id.ToString();
         }
+
 
         public async Task<List<Order>> GetOrdersByUserIdAsync(string userId) 
         {

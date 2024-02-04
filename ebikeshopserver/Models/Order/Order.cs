@@ -21,6 +21,8 @@ namespace ebikeshopserver.Models.Order
 
         public decimal? TotalPrice { get; set; }
 
+        public List<OrderSellPost> FrozenSellPost { get; set; } = new List<OrderSellPost>();
+
         [Required]
         public Address Address { get; set; }
     }
