@@ -12,7 +12,7 @@ namespace ebikeshopserver.Authentication
     {
         public static string GenerateAuthToken(User user)
         {
-            string secretKey = SecretSettingsProvider.GetPasswordHasher();
+            string secretKey = SecretSettingsProvider.GetTokenHasher();
 
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             SigningCredentials credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);

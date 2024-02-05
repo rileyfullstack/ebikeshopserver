@@ -18,6 +18,11 @@ namespace ebikeshopserver.Utils
         {
             return Configuration.GetConnectionString("SecretHasher");
         }
+
+        public static string GetTokenHasher()
+        {
+            return Configuration.GetConnectionString("TokenHasher");
+        }
     }
 }
 

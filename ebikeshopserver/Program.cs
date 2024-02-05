@@ -2,6 +2,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using ebikeshopserver.Services.Data;
 using ebikeshopserver.Middlewares;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using ebikeshopserver.Authentication;
+using ebikeshopserver.Utils;
 
 namespace ebikeshopserver;
 
@@ -37,6 +40,21 @@ public class Program
             });
         });
 
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                            .AddJwtBearer(options =>
+                            {
+                                options.TokenValidationParameters = new TokenValidationParameters
+                                {
+                                    ValidateIssuer = true,
+                                    ValidateAudience = true,
+                                    ValidateLifetime = true,
+                                    ValidateIssuerSigningKey = true,
+                                    ValidIssuer = "EbikeShopServer",
+                                    ValidAudience = "EbikeShopFrontEnd",
+                                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretSettingsProvider.GetPasswordHasher()))
+                                };
+                            });
+
         var app = builder.Build();
 
         // Configure the HTTP request pipeline.
@@ -49,6 +67,8 @@ public class Program
         app.UseCors("LocalCorsPolicy");
 
         app.UseHttpsRedirection();
+
+        app.UseAuthentication();
 
         app.UseAuthorization();
 

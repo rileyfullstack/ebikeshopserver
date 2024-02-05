@@ -23,4 +23,3 @@ namespace ebikeshopserver.Models.Order
         public int Quantity { get; set; }
     }
 }
-
