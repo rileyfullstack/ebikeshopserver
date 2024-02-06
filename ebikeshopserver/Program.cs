@@ -54,11 +54,12 @@ public class Program
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretSettingsProvider.GetTokenHasher()))
             };
         });
-
+        
         builder.Services.AddAuthorization(options =>
         {
             options.AddPolicy("MustBeAdmin", policy => policy.RequireClaim("role", "Admin"));
-            options.AddPolicy("MustBeBusinessOrAdmin", policy => policy.RequireClaim("role", "Seller", "Admin"));
+            options.AddPolicy("MustBeSellerOrAdmin", policy => policy.RequireClaim("role", "Seller", "Admin"));
+
 
         });
 

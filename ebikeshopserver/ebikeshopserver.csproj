@@ -32,7 +32,6 @@
     <None Remove="Services\SecretSettings\" />
     <None Remove="Models\Order\" />
     <None Remove="Models\SellPosts\" />
-    <None Remove="Authorization\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Services\" />
@@ -47,6 +46,5 @@
     <Folder Include="Services\SecretSettings\" />
     <Folder Include="Models\Order\" />
     <Folder Include="Models\SellPosts\" />
-    <Folder Include="Authorization\" />
   </ItemGroup>
 </Project>

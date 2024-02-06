@@ -4,6 +4,8 @@ using ebikeshopserver.Authentication;
 using ebikeshopserver.Exceptions;
 using ebikeshopserver.Models.User;
 using ebikeshopserver.Services;
+using ebikeshopserver.Utils;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 
@@ -11,6 +13,7 @@ namespace ebikeshopserver.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private UsersService _usersService;
@@ -21,15 +24,23 @@ namespace ebikeshopserver.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAllUsers() //Make sure this is only accssiable to admin
+        [Authorize(Policy = "MustBeAdmin")]
+        public async Task<IActionResult> GetAllUsers() //only available to admin
         {
             List<User> result = await _usersService.GetUsersAsync();
             return Ok(result);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetSpecificUser(string id) //Make sure this is only accessible to admins or users with an id the same as the requested user
+        [AllowAnonymous]
+        public async Task<IActionResult> GetSpecificUser(string id) //only available to admins or users with the same id as the requested user
         {
+            var (isAuthorized, actionResult) = AuthorizeUserOrAdmin(id);
+            if (!isAuthorized)
+            {
+                return actionResult!;
+            }
+
             try
             {
                 User u = await _usersService.GetUserAsync(id);
@@ -42,6 +53,7 @@ namespace ebikeshopserver.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> RegisterNewUser([FromBody] User newUser)
         {
             if (!ModelState.IsValid)
@@ -66,6 +78,13 @@ namespace ebikeshopserver.Controllers
             {
                 return BadRequest(ModelState);
             }
+
+            var (isAuthorized, actionResult) = AuthorizeUserOrAdmin(id);
+            if (!isAuthorized)
+            {
+                return actionResult!;
+            }
+
             try
             {
                 User newUser = await _usersService.EditUserAsync(id, updatedUser);
@@ -78,8 +97,15 @@ namespace ebikeshopserver.Controllers
         }
 
         [HttpDelete("{id}")]
+        [AllowAnonymous]
         public async Task<IActionResult> DeleteUser(string id) //Make sure this is only accessible to admins or users with an id the same as the requested user
         {
+            var (isAuthorized, actionResult) = AuthorizeUserOrAdmin(id);
+            if (!isAuthorized)
+            {
+                return actionResult!;
+            }
+
             try
             {
                 await _usersService.DeleteUserAsync(id);
@@ -92,6 +118,7 @@ namespace ebikeshopserver.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
         {
             try
@@ -107,6 +134,24 @@ namespace ebikeshopserver.Controllers
 
             }
         }
+
+        private (bool IsAuthorized, IActionResult? ActionResult) AuthorizeUserOrAdmin(string requestedUserId)
+        {
+            var currentUserId = UserIdProvider.GetUserId(HttpContext);
+            if (currentUserId == null)
+            {
+                return (false, Unauthorized("User is not authenticated."));
+            }
+
+            var isAdmin = HttpContext.User.IsInRole("Admin");
+            if (!isAdmin && currentUserId != requestedUserId)
+            {
+                return (false, Forbid("You are not authorized to view this information."));
+            }
+
+            return (true, null);
+        }
+
     }
 }
 
