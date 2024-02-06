@@ -57,8 +57,8 @@ public class Program
 
         builder.Services.AddAuthorization(options =>
         {
-            options.AddPolicy("MustBeAdmin", policy => policy.RequireClaim("type", "Admin"));
-            options.AddPolicy("MustBeBusinessOrAdmin", policy => policy.RequireClaim("type", "Business", "Admin"));
+            options.AddPolicy("MustBeAdmin", policy => policy.RequireClaim("role", "Admin"));
+            options.AddPolicy("MustBeBusinessOrAdmin", policy => policy.RequireClaim("role", "Seller", "Admin"));
 
         });
 
