@@ -1,8 +1,11 @@
 ﻿using System;
+using Microsoft.Extensions.Configuration;
+using System.IO;
+
 namespace ebikeshopserver.Utils
 {
-	public class SecretSettingsProvider
-	{
+    public class SecretSettingsProvider
+    {
         private static IConfiguration Configuration { get; set; }
 
         static SecretSettingsProvider()
@@ -16,13 +19,12 @@ namespace ebikeshopserver.Utils
 
         public static string GetPasswordHasher()
         {
-            return Configuration.GetConnectionString("SecretHasher");
+            return Configuration["ConnectionString:SecretHasher"];
         }
 
         public static string GetTokenHasher()
         {
-            return Configuration.GetConnectionString("TokenHasher");
+            return Configuration["ConnectionString:TokenHasher"];
         }
     }
 }
-

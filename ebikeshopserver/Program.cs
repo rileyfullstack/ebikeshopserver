@@ -41,19 +41,26 @@ public class Program
         });
 
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                            .AddJwtBearer(options =>
-                            {
-                                options.TokenValidationParameters = new TokenValidationParameters
-                                {
-                                    ValidateIssuer = true,
-                                    ValidateAudience = true,
-                                    ValidateLifetime = true,
-                                    ValidateIssuerSigningKey = true,
-                                    ValidIssuer = "EbikeShopServer",
-                                    ValidAudience = "EbikeShopFrontEnd",
-                                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretSettingsProvider.GetPasswordHasher()))
-                                };
-                            });
+        .AddJwtBearer(options =>
+        {
+            options.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = "EbikeShopServer",
+                ValidAudience = "EbikeShopFrontEnd",
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretSettingsProvider.GetTokenHasher()))
+            };
+        });
+
+        builder.Services.AddAuthorization(options =>
+        {
+            options.AddPolicy("MustBeAdmin", policy => policy.RequireClaim("type", "Admin"));
+            options.AddPolicy("MustBeBusinessOrAdmin", policy => policy.RequireClaim("type", "Business", "Admin"));
+
+        });
 
         var app = builder.Build();
 
