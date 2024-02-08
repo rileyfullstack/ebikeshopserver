@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using ebikeshopserver.Exceptions;
 using ebikeshopserver.Models.GlobalModels;
 using ebikeshopserver.Models.Order;
@@ -88,11 +89,21 @@ namespace ebikeshopserver.Services
             return order;
         }
 
-        public async Task<List<Order>> GetOrdersByDateRangeAsync(DateTime start, DateTime end)
+        public async Task<List<Order>> GetOrdersByDateRangeAsync(DateTime start, DateTime end, string userId)
         {
-            var filter = Builders<Order>.Filter.Gte(o => o.OrderTime, start) & Builders<Order>.Filter.Lte(o => o.OrderTime, end);
-            return await _orders.Find(filter).ToListAsync();
+            var dateFilter = Builders<Order>.Filter.Gte(o => o.OrderTime, start) & Builders<Order>.Filter.Lte(o => o.OrderTime, end);
+            var userFilter = Builders<Order>.Filter.Eq(o => o.UserId, userId);
+            var combinedFilter = Builders<Order>.Filter.And(dateFilter, userFilter);
+
+            var orderList = await _orders.Find(combinedFilter).ToListAsync();
+            if (orderList == null)
+            {
+                throw new NoPostsFoundException("No posts at this date range have been found.");
+            }
+
+            return orderList;
         }
+
     }
 }
 
