@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Http.Extensions;
 
 namespace ebikeshopserver.Middlewares
@@ -18,6 +19,9 @@ namespace ebikeshopserver.Middlewares
             string origin = context.Request.GetDisplayUrl();
             string path = context.Request.Path;
             string method = context.Request.Method;
+            var userClaims = context.User.Claims;
+            var roleClaim = userClaims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
             DateTime dateTime = DateTime.Now;
 
             await _next(context);
@@ -39,7 +43,7 @@ namespace ebikeshopserver.Middlewares
             HttpStatusCode httpStatusCode = (HttpStatusCode)statusCode;
             string statusDescription = httpStatusCode.ToString();
 
-            Console.WriteLine($"Time: [{dateTime}] - Origin: {origin} - Path: {path} - Method: {method} - Status: {statusCode} ({statusDescription}) - ResTime: {responseTime}ms");
+            Console.WriteLine($"Time: [{dateTime}] - Origin: {origin} - Path: {path} - Method: {method} - Status: {statusCode} ({statusDescription}) - ResTime: {responseTime}ms - Role: {roleClaim}");
             Console.ResetColor();
         }
 

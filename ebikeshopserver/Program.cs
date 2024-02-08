@@ -14,12 +14,11 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-
         builder.Services.AddControllers().AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
         });
+
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -54,14 +53,13 @@ public class Program
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(SecretSettingsProvider.GetTokenHasher()))
             };
         });
-        
+
         builder.Services.AddAuthorization(options =>
         {
-            options.AddPolicy("MustBeAdmin", policy => policy.RequireClaim("role", "Admin"));
-            options.AddPolicy("MustBeSellerOrAdmin", policy => policy.RequireClaim("role", "Seller", "Admin"));
-
-
+            options.AddPolicy("MustBeAdmin", policy => policy.RequireClaim(Constants.RoleClaimType, "Admin"));
+            options.AddPolicy("MustBeSellerOrAdmin", policy => policy.RequireClaim(Constants.RoleClaimType, "Seller", "Admin"));
         });
+
 
         var app = builder.Build();
 
@@ -78,9 +76,9 @@ public class Program
 
         app.UseAuthentication();
 
-        app.UseAuthorization();
-
         app.UseMiddleware<RequestsResponsesLogger>();
+
+        app.UseAuthorization();
 
         app.MapControllers();
 
