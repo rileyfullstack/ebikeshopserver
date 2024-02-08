@@ -32,7 +32,7 @@ namespace ebikeshopserver.Controllers
         }
 
         [HttpGet("{id}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> GetSpecificUser(string id) //only available to admins or users with the same id as the requested user
         {
             var (isAuthorized, actionResult) = AuthorizationHelper.AuthorizeUserOrAdmin(HttpContext,id);
@@ -72,6 +72,7 @@ namespace ebikeshopserver.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize]
         public async Task<IActionResult> Put(string id, [FromBody] User updatedUser) //Make sure this is only accessible to admins or users with an id the same as the requested user
         {
             if (!ModelState.IsValid)
@@ -97,7 +98,7 @@ namespace ebikeshopserver.Controllers
         }
 
         [HttpDelete("{id}")]
-        [AllowAnonymous]
+        [Authorize]
         public async Task<IActionResult> DeleteUser(string id) //Make sure this is only accessible to admins or users with an id the same as the requested user
         {
             var (isAuthorized, actionResult) = AuthorizationHelper.AuthorizeUserOrAdmin(HttpContext,id);
