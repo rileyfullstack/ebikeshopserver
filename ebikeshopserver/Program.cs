@@ -17,6 +17,7 @@ public class Program
         builder.Services.AddControllers().AddJsonOptions(options =>
         {
             options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+            options.JsonSerializerOptions.Converters.Add(new ObjectIdJsonConverter()); //להכניס פה
         });
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -59,7 +60,6 @@ public class Program
             options.AddPolicy("MustBeAdmin", policy => policy.RequireClaim(Constants.RoleClaimType, "Admin"));
             options.AddPolicy("MustBeSellerOrAdmin", policy => policy.RequireClaim(Constants.RoleClaimType, "Seller", "Admin"));
         });
-
 
         var app = builder.Build();
 
