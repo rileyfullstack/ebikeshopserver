@@ -35,6 +35,8 @@ namespace ebikeshopserver.Models.SellPosts
         [Required]
         public decimal Price { get; set; }
 
+        public decimal ShippingPrice { get; set; }
+
         public Image[] Image { get; set; }
 
         public double CurrentDiscount { get; set; }
