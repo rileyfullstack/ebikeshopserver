@@ -1,4 +1,5 @@
 ﻿using System.Security.Authentication;
+using System.Security.Claims;
 using ebikeshopserver.Authentication;
 using ebikeshopserver.Authorization;
 using ebikeshopserver.Exceptions;
@@ -31,19 +32,19 @@ namespace ebikeshopserver.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
-        [Authorize]
-        public async Task<IActionResult> GetSpecificUser(string id) //only available to admins or users with the same id as the requested user
+        [HttpGet("me")]
+        public async Task<IActionResult> GetCurrentUser()
         {
-            var (isAuthorized, actionResult) = AuthorizationHelper.AuthorizeUserOrAdmin(HttpContext,id);
-            if (!isAuthorized)
+            var userId = HttpContext.User.FindFirstValue("id");
+            Console.WriteLine(userId);
+            if (userId == null)
             {
-                return actionResult!;
+                return Unauthorized("User ID not found in the token.");
             }
 
             try
             {
-                User u = await _usersService.GetUserAsync(id);
+                User u = await _usersService.GetUserAsync(userId);
                 return Ok(u);
             }
             catch (UserNotFoundException ex)
@@ -63,7 +64,7 @@ namespace ebikeshopserver.Controllers
             try
             {
                 object DTOuser = await _usersService.CreateUserAsync(newUser);
-                return CreatedAtAction(nameof(GetSpecificUser), new { Id = newUser.Id }, DTOuser);
+                return CreatedAtAction(nameof(GetCurrentUser), new { Id = newUser.Id }, DTOuser);
             }
             catch (Exception ex)
             {

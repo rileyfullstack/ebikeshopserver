@@ -29,7 +29,6 @@ namespace ebikeshopserver.Models.User
         [Required]
         public Image ProfilePicture { get; set; }
 
-        [Required]
         public Address[] UserAddress { get; set; }
 
         [Required]
